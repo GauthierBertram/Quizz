@@ -9,10 +9,6 @@ using namespace std;
 
 
 int main() {
-    string reponse;
-    std::cout << "aaaaaaaaaaa ";
-    std::cin >> reponse;
-    
     Quiz quiz;
     quiz.chargerQuestions(".txt/questions.txt");
 
