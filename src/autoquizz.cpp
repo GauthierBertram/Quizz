@@ -1,9 +1,9 @@
-//#include "Quiz.h"
+#include "quizz.h"
 #include <iostream>
 
 int main() {
-    //Quiz quiz;
-    //quiz.chargerQuestions("questions.txt");
+    Quiz quiz;
+    quiz.chargerQuestions(".txt/questions.txt");
 
     int choix;
     do {
@@ -11,19 +11,19 @@ int main() {
         std::cin >> choix;
         std::cin.ignore(); // Ignorer le retour à la ligne
         if (choix == 1) {
-            //quiz.lancerQuiz();
+            quiz.lancerQuiz();
         } else if (choix == 2) {
             std::string question, reponse;
             std::cout << "Entrez la question : ";
-            //std::getline(std::cin, question);
+            std::getline(std::cin, question);
             std::cout << "Entrez la réponse : ";
-            //std::getline(std::cin, reponse);
-            //quiz.ajouterQuestion(question, reponse);
+            std::getline(std::cin, reponse);
+            quiz.ajouterQuestion(question, reponse);
         }
     } while (choix != 3);
     std::cout << "1. Lancer le quiz\n2. Ajouter une question\n3. Quitter\nVotre choix : ";
 
-    //quiz.sauvegarderQuestions("questions.txt");
+    quiz.sauvegarderQuestions(".txt/questions.txt");
 
     return 0;
 }
