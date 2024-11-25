@@ -4,7 +4,7 @@
 #include <vector>
 using namespace std 
 
-Class Qcm:  
+class Qcm:  
 public question {
 vector<string> options;
 }
