@@ -31,9 +31,9 @@ int main() {
         } else if (choix == 2) {
             std::string question, reponse;
             std::cout << "Entrez la question : ";
-            std::getline(std::cin, question);
+            std::cin >> question;
             std::cout << "Entrez la réponse : ";
-            std::getline(std::cin, reponse);
+            std::cin >> reponse;
             quiz.ajouterQuestion(question, reponse);
 
         }
