@@ -4,20 +4,15 @@
 #include <vector>
 using namespace std;
 
-struct Question {
-    string questionText; //L'énoncé de la question
-    vector<string> options; //Les différentes options proposées 
-    int reponse; // Index de l'option correcte (0, 1, 2, ...) //La réponse correcte
-};
 
-void displayQuestion(const Question& q, int questionNumber) {
-    std::cout << "Question " << questionNumber + 1 << ": " << q.questionText << "\n";
-    for (size_t i = 0; i < q.options.size(); ++i) {
-        std::cout << i + 1 << ". " << q.options[i] << "\n";
-    }
-}
+
+
 
 int main() {
+    string reponse;
+    std::cout << "aaaaaaaaaaa ";
+    std::cin >> reponse;
+    
     Quiz quiz;
     quiz.chargerQuestions(".txt/questions.txt");
 
