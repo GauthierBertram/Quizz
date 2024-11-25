@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string> 
 #include <vector>
-using namespace std
+using namespace std;
 
 struct Question {
     string questionText; //L'énoncé de la question
