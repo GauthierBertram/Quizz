@@ -1,5 +1,21 @@
 #include "quizz.h"
 #include <iostream>
+#include <string> 
+#include <vector>
+using namespace std
+
+struct Question {
+    string questionText; //L'énoncé de la question
+    vector<string> options; //Les différentes options proposées 
+    int reponse; // Index de l'option correcte (0, 1, 2, ...) //La réponse correcte
+};
+
+void displayQuestion(const Question& q, int questionNumber) {
+    std::cout << "Question " << questionNumber + 1 << ": " << q.questionText << "\n";
+    for (size_t i = 0; i < q.options.size(); ++i) {
+        std::cout << i + 1 << ". " << q.options[i] << "\n";
+    }
+}
 
 int main() {
     Quiz quiz;
@@ -7,9 +23,9 @@ int main() {
 
     int choix;
     do {
-        std::cout << "1. Lancer le quiz\n2. Ajouter une question\n3. Quitter\nVotre choix : ";
-        std::cin >> choix;
-        std::cin.ignore(); // Ignorer le retour à la ligne
+        cout << "1. Lancer le quiz\n2. Ajouter une question\n3. Quitter\nVotre choix : ";
+        cin >> choix;
+        cin.ignore(); // Ignorer le retour à la ligne
         if (choix == 1) {
             quiz.lancerQuiz();
         } else if (choix == 2) {
@@ -19,9 +35,10 @@ int main() {
             std::cout << "Entrez la réponse : ";
             std::getline(std::cin, reponse);
             quiz.ajouterQuestion(question, reponse);
+
         }
     } while (choix != 3);
-    std::cout << "1. Lancer le quiz\n2. Ajouter une question\n3. Quitter\nVotre choix : ";
+    cout << "1. Lancer le quiz\n2. Ajouter une question\n3. Quitter\nVotre choix : ";
 
     quiz.sauvegarderQuestions(".txt/questions.txt");
 
