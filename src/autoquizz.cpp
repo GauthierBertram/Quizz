@@ -21,7 +21,9 @@ int main() {
             //quiz.ajouterQuestion(question, reponse);
         }
     } while (choix != 3);
+    std::cout << "1. Lancer le quiz\n2. Ajouter une question\n3. Quitter\nVotre choix : ";
 
     //quiz.sauvegarderQuestions("questions.txt");
+
     return 0;
 }
