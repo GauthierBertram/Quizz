@@ -1,4 +1,5 @@
 //#include "Quiz.h"
+#include <iostream>
 
 int main() {
     //Quiz quiz;
@@ -10,13 +11,13 @@ int main() {
         std::cin >> choix;
         std::cin.ignore(); // Ignorer le retour à la ligne
         if (choix == 1) {
-            quiz.lancerQuiz();
+            //quiz.lancerQuiz();
         } else if (choix == 2) {
             std::string question, reponse;
             std::cout << "Entrez la question : ";
-            std::getline(std::cin, question);
+            //std::getline(std::cin, question);
             std::cout << "Entrez la réponse : ";
-            std::getline(std::cin, reponse);
+            //std::getline(std::cin, reponse);
             //quiz.ajouterQuestion(question, reponse);
         }
     } while (choix != 3);
