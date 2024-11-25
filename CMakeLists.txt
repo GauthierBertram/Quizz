@@ -10,17 +10,17 @@ if (POLICY CMP0141)
 endif()
 
 
-project ("Battleships")
+project ("Quizz")
 
 include_directories(src)
 include_directories(src/Enums)
 
 # Collect all source files in src and src/Enums
-file(GLOB_RECURSE SOURCES "src/*.cpp" "src/Enums/*.cpp" "src/*.h" "src/Enums/*.h")
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h")
 
 
 # Add source to this project's executable.
-add_executable (Battleships ${SOURCES})
+add_executable (Quizz ${SOURCES})
 
 
 
