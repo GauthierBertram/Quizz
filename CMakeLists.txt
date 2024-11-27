@@ -1,7 +1,7 @@
 # CMakeList.txt : CMake project for TestVTK, include source and define
 # project specific logic here.
 #
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -13,7 +13,6 @@ endif()
 project ("Quizz")
 
 include_directories(src)
-include_directories(src/Enums)
 
 # Collect all source files in src
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h")
