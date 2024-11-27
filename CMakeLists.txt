@@ -15,7 +15,7 @@ project ("Quizz")
 include_directories(src)
 include_directories(src/Enums)
 
-# Collect all source files in src and src/Enums
+# Collect all source files in src
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h")
 
 
