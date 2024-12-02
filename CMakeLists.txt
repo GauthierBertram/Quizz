@@ -15,7 +15,7 @@ project ("Quizz")
 include_directories(src)
 
 # Collect all source files in src
-file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h")
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h" ".txt/*.txt")
 
 
 # Add source to this project's executable.

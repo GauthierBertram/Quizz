@@ -10,13 +10,13 @@ using namespace std;
 
 int main() {
     Quiz quiz;
-    quiz.chargerQuestions(".txt/questions.txt");
+    quiz.chargerQuestions("questions.txt");
 
     int choix;
     do {
         cout << "1. Lancer le quiz\n2. Ajouter une question\n3. Quitter\nVotre choix : ";
         cin >> choix;
-        cin.ignore(); // Ignorer le retour à la ligne
+        cin.ignore();
         if (choix == 1) {
             quiz.lancerQuiz();
         } else if (choix == 2) {
@@ -31,7 +31,7 @@ int main() {
     } while (choix != 3);
     cout << "1. Lancer le quiz\n2. Ajouter une question\n3. Quitter\nVotre choix : ";
 
-    quiz.sauvegarderQuestions(".txt/questions.txt");
+    quiz.sauvegarderQuestions("questions.txt");
 
     return 0;
 }

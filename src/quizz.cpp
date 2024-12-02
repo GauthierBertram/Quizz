@@ -24,7 +24,8 @@ void Quiz::lancerQuiz()
 {
     int score = 0;
     for (const auto& q : questions) {
-        std::cout << q.getTexte() << "\nVotre réponse : ";
+        q.afficherQuestion(q,1);
+        std::cout  << "Votre réponse : ";
         std::string reponse;
         std::getline(std::cin, reponse);
         if (q.verifierReponse(reponse)) {
@@ -34,7 +35,7 @@ void Quiz::lancerQuiz()
             std::cout << "Faux. La bonne réponse était : " << q.getReponse() << "\n";
         }
     }
-    std::cout << "Score final : " << score << " / " << questions.size() << "\n";
+    std::cout << "\n\n\nScore final : " << score << " / " << questions.size() << "\n\n\n";
 }
 
 void Quiz::ajouterQuestion(const std::string &texte, const std::string &reponse)
