@@ -2,7 +2,6 @@
 
 void Quiz::chargerQuestions(const std::string &fichier)
 {
-
     std::ifstream inputFile(fichier);
     std::string line;
     while (std::getline(inputFile, line)) {
@@ -10,7 +9,6 @@ void Quiz::chargerQuestions(const std::string &fichier)
         if (std::getline(inputFile, line)) {
             questions.emplace_back(texte, line);
         }
-    
     }
 }
 
