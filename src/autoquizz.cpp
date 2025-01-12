@@ -50,6 +50,16 @@ int main() {
         return -1;
     }
 
+    sf::Texture backgroundTexture;
+    if (!backgroundTexture.loadFromFile("background.png")) {
+        std::cerr << "Erreur : Impossible de charger l'image de fond !" << std::endl;
+        return -1;
+    }
+
+    // Créer un sprite pour afficher la texture
+    sf::Sprite backgroundSprite;
+    backgroundSprite.setTexture(backgroundTexture);
+
     // Création des boutons
     sf::Text textStart("1. Lancer le quiz", font, 30);
     sf::Text textAddQuestion("2. Ajouter une question", font, 30);
@@ -70,11 +80,16 @@ int main() {
     buttonQuit.setPosition(300, 350);
     buttonQuit.setFillColor(sf::Color(255, 100, 100));
 
+
+    
+
+
     bool quizLance = false;
     int choix = 0;
     std::string question, reponse;
 
     while (window.isOpen()) {
+        
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
@@ -83,6 +98,7 @@ int main() {
                 if (event.mouseButton.button == sf::Mouse::Left) {
                     if (buttonStart.getGlobalBounds().contains(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y))) {
                         // Lancer le quiz
+                        window.draw(backgroundSprite);
                         quiz.lancerQuiz(window, font);
                         quizLance = true;
                     }
@@ -109,16 +125,13 @@ int main() {
         window.clear();
 
         // Affichage des boutons et du texte
+        window.draw(backgroundSprite);
         window.draw(buttonStart);
         window.draw(textStart);
         window.draw(buttonAdd);
         window.draw(textAddQuestion);
         window.draw(buttonQuit);
         window.draw(textQuit);
-
-        if (quizLance) {
-            afficherMessage(window, "Quiz lance!", 300, 450);
-        }
 
         window.display();
     }
