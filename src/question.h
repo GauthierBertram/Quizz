@@ -15,10 +15,13 @@ protected:
 
 public:
     Question(const std::string& t, const std::string& r);
+    virtual ~Question() = default; // Destructeur virtuel pour la gestion correcte des classes dérivées
+
     const std::string& getReponse() const;
     const std::string& getTexte() const;
-    void setReponse(std::string& r);
-    void setTexte(std::string& t);
-    void afficherQuestion(sf::RenderWindow& window, sf::Font& font) const;
+    void setReponse(const std::string& r);
+    void setTexte(const std::string& t);
+
+    virtual void afficherQuestion(sf::RenderWindow& window, sf::Font& font) const; // Méthode virtuelle
     bool verifierReponse(const std::string& utilisateur) const;
 };

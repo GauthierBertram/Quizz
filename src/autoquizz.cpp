@@ -11,12 +11,9 @@ using namespace std;
 
 // Fonction pour afficher un message
 void afficherMessage(sf::RenderWindow& window, const std::string& message, float x, float y) {
-
-
-    
     sf::Font font;
     if (!font.loadFromFile("C:\\Users\\gauth\\OneDrive\\Documents\\GitHub\\Quizz\\build\\Debug\\fonts\\arial.ttf")) {
-        std::cout << "Erreuuuuuuuuur de chargement de la police" << std::endl;
+        std::cout << "Erreur de chargement de la police" << std::endl;
         return;
     }
 
@@ -29,7 +26,7 @@ void afficherMessage(sf::RenderWindow& window, const std::string& message, float
 int main() {
     // Chargement du quiz
     Quiz quiz;
-    quiz.chargerQuestions("questions.txt");
+    quiz.chargerQuestions();
 
     // Création de la fenêtre
     sf::RenderWindow window(sf::VideoMode(800, 600), "Quiz - Interface Graphique");
@@ -62,7 +59,7 @@ int main() {
 
     // Création des boutons
     sf::Text textStart("1. Lancer le quiz", font, 30);
-    sf::Text textAddQuestion("2. Ajouter une question", font, 30);
+    sf::Text textAddQuestion("2. Ajouter une question", font, 23);
     sf::Text textQuit("3. Quitter", font, 30);
     textStart.setPosition(300, 150);
     textAddQuestion.setPosition(300, 250);
@@ -80,16 +77,12 @@ int main() {
     buttonQuit.setPosition(300, 350);
     buttonQuit.setFillColor(sf::Color(255, 100, 100));
 
-
     
 
-
-    bool quizLance = false;
-    int choix = 0;
+    bool afficherChoixType = false;
     std::string question, reponse;
 
     while (window.isOpen()) {
-        
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
@@ -98,21 +91,12 @@ int main() {
                 if (event.mouseButton.button == sf::Mouse::Left) {
                     if (buttonStart.getGlobalBounds().contains(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y))) {
                         // Lancer le quiz
-                        window.draw(backgroundSprite);
-                        quiz.lancerQuiz(window, font);
-                        quizLance = true;
-                    }
-                    else if (buttonAdd.getGlobalBounds().contains(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y))) {
-                        // Ajouter une question
-                        std::cout << "Entrez la question : ";
-                        std::getline(std::cin, question);
-                        std::cout << "Entrez la réponse : ";
-                        std::getline(std::cin, reponse);
-                        if (!question.empty() && !reponse.empty()) {
-                            quiz.ajouterQuestion(question, reponse);
-                        } else {
-                            std::cout << "La question et la réponse ne peuvent pas être vides." << std::endl;
-                        }
+                        quiz.lancerQuiz(window, font, backgroundSprite);
+                    } else if (buttonAdd.getGlobalBounds().contains(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y))) {
+                        // Afficher les options pour le type de question
+                        afficherChoixType = true;
+                        quiz.ajouterQuestion(window,font,afficherChoixType,backgroundSprite);
+                        afficherChoixType = false;
                     }
                     else if (buttonQuit.getGlobalBounds().contains(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y))) {
                         // Quitter
@@ -121,23 +105,24 @@ int main() {
                 }
             }
         }
+        if (!afficherChoixType){
+            window.clear();
+            window.draw(backgroundSprite);
+            
+            // Affichage des boutons principaux
+                
+            window.draw(buttonStart);
+            window.draw(textStart);
+            window.draw(buttonAdd);
+            window.draw(textAddQuestion);
+            window.draw(buttonQuit);
+            window.draw(textQuit);
 
-        window.clear();
-
-        // Affichage des boutons et du texte
-        window.draw(backgroundSprite);
-        window.draw(buttonStart);
-        window.draw(textStart);
-        window.draw(buttonAdd);
-        window.draw(textAddQuestion);
-        window.draw(buttonQuit);
-        window.draw(textQuit);
-
-        window.display();
+            window.display();
+        }
+        
     }
-
-    // Sauvegarder les questions à la fin
-    quiz.sauvegarderQuestions("questions.txt");
+    
 
     return 0;
 }

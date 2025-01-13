@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream> 
+#include <iostream>
 #include "question.h"
 #include <string>
 #include <vector>
@@ -9,9 +9,15 @@ using namespace std;
 class Qcm : public Question
 {
 private:
-    std::vector<string> options;
+    std::vector<std::string> options;
+    
 public:
-    Qcm(const std::string& t, vector<string> o,const std::string& r);
+    // Constructeur
+    Qcm(const std::string& t, const std::vector<std::string>& o, const std::string& r);
+
+    // Méthode pour obtenir les options sous forme de chaîne
     const std::string& getOptions() const;
-    const void afficherQuestion(Question& q, int questionNumber) const;
+
+    // Méthode pour afficher une question et ses options
+    void afficherQuestion(int questionNumber) const;
 };
