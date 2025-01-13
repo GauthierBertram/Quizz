@@ -8,46 +8,50 @@
 #include <SFML/System.hpp>
 
 std::string filePath = "questions.txt";
-// Charger les questions depuis un fichier
 void Quiz::chargerQuestions() {
     std::ifstream inputFile(filePath);
     if (!inputFile.is_open()) {
         std::cerr << "Erreur : Impossible d'ouvrir le fichier " << filePath << std::endl;
         return;
     }
-    bool getQ = false;
 
     std::string line;
+
     while (std::getline(inputFile, line)) {
-        if (!line.empty()){
-            std::string texte = line;
-            // Première ligne = texte de la question
-            std::string firstThreeChars = {texte[0], texte[1], texte[2]};
-            std::string reponse;
-            std::getline(inputFile, reponse);
-            
-            if (firstThreeChars == "QCM"){
-                std::vector<std::string> options;
-                options.push_back(reponse);
-                while (std::getline(inputFile, line) && line != "END") {
-                    if (!line.empty()) {
-                        std::cout <<  std::endl << line <<  std::endl;
-                       options.push_back(line); // Ajouter chaque option
-                    }
+        if (line.empty()) continue; // Ignorer les lignes vides
+
+        // Vérifier si c'est un QCM
+        if (line.rfind("QCM :", 0) == 0) {
+            // Traiter un QCM
+            std::string texte = line.substr(5); // Extraire la question après "QCM :"
+            std::vector<std::string> options;
+
+            std::getline(inputFile, line);
+            std::string reponse = line;
+
+            // Lire les options jusqu'à "END"
+            while (std::getline(inputFile, line) && line != "END") {
+                if (!line.empty()) {
+                    options.push_back(line);
                 }
-        
-                // Créer un QCM avec les options
-                questions.push_back(std::make_shared<Qcm>(texte, options, reponse));
-                std::cout << "QCM : " << texte << reponse << std::endl;
-            }
-           else{
-               
-               std::cout << texte << reponse << std::endl;
-               questions.push_back(std::make_shared<Question>(texte, reponse));
             }
 
+
+            // Ajouter le QCM à la liste des questions
+            questions.push_back(std::make_shared<Qcm>(texte, options, reponse));
+            std::cout << "QCM chargé : " << texte << ", Réponse : " << reponse << std::endl;
+
+        } else {
+            // Traiter une question standard
+            std::string texte = line; // Ligne actuelle est la question
+            std::string reponse;
+
+            if (std::getline(inputFile, reponse)) {
+                // Ajouter la question standard à la liste des questions
+                questions.push_back(std::make_shared<Question>(texte, reponse));
+                std::cout << "Question standard chargée : " << texte << ", Réponse : " << reponse << std::endl;
+            }
         }
-        
     }
 
     inputFile.close();
@@ -63,14 +67,17 @@ void Quiz::sauvegarderQcm(const Qcm q) const {
     }
 
     // Sauvegarder le texte et la réponse de la question
-    outputFile << q.getTexte();
+    outputFile << "\n";
+    outputFile << "\n";
+    outputFile << "QCM : " + q.getTexte() ;
     outputFile << q.getReponse();
-    outputFile << "QCM";
-    const auto& options = q.getOptions();
-    for (size_t i = 0; i < options.size(); ++i) {
-        outputFile << (i + 1) << ". " << options[i];
+    std::vector<std::string> options = q.getOptions();
+    for (int i = 0; i < options.size(); ++i) {
+        outputFile << options[i];
     }
+    outputFile << "\n";
     outputFile << "END";
+    outputFile << "\n";
     std::cout << "La question a été sauvegardee" << std::endl;
 }
 
@@ -82,6 +89,7 @@ void Quiz::sauvegarderQuestion(const Question q) const {
         return;
     }
     // Sauvegarder le texte et la réponse de la question
+    outputFile << "\n";
     outputFile << "\n" << q.getTexte();
     outputFile << q.getReponse();
     outputFile << "\n";
@@ -164,7 +172,7 @@ void Quiz::lancerQuiz(sf::RenderWindow& window, sf::Font& font, sf::Sprite backg
         }
         else {
             // Si la question n'est pas un QCM, traiter comme une question simple
-            sf::Text inputPrompt("Votre réponse : ", font, 30);
+            sf::Text inputPrompt("Votre reponse : ", font, 30);
             inputPrompt.setFillColor(sf::Color::White);
             inputPrompt.setPosition(50, 200);
             window.draw(inputPrompt);
@@ -326,15 +334,16 @@ void Quiz::ajouterQcm(sf::RenderWindow& window, sf::Font& font, bool afficherCho
     sf::Text instructionText("Appuyez sur Entrée pour valider chaque champ.", font, 20);
     instructionText.setPosition(50, 150);
 
-    sf::Text optionsText("Ajoutez une option (max 5) : ", font, 30);
+    sf::Text optionsText("Ajoutez une option (max 4) : ", font, 30);
     optionsText.setPosition(50, 250);
 
-    sf::Text correctAnswerText("Entrez la réponse correcte (parmi les options) : ", font, 30);
+    sf::Text correctAnswerText("Entrez la reponse correcte (parmi les options) : ", font, 30);
     correctAnswerText.setPosition(50, 350);
 
     // Variables pour stocker les entrées utilisateur
     sf::String userInputQuestion;
-    std::vector<sf::String> userOptions;
+    std::vector<std::string> userOptions;
+    sf::String userInputOption;
     sf::String userCorrectAnswer;
 
     bool isInputtingQuestion = true;
@@ -342,7 +351,8 @@ void Quiz::ajouterQcm(sf::RenderWindow& window, sf::Font& font, bool afficherCho
     bool isChoosingCorrectAnswer = false;
 
     // Compteur pour limiter le nombre d'options
-    const int maxOptions = 5;
+    const int maxOptions = 4;
+    int i = 0;
 
     // Boucle d'entrée utilisateur
     while (isInputtingQuestion || isAddingOptions || isChoosingCorrectAnswer) {
@@ -359,8 +369,8 @@ void Quiz::ajouterQcm(sf::RenderWindow& window, sf::Font& font, bool afficherCho
                     if (event.text.unicode == '\b') { // Backspace
                         if (isInputtingQuestion && !userInputQuestion.isEmpty()) {
                             userInputQuestion.erase(userInputQuestion.getSize() - 1, 1);
-                        } else if (isAddingOptions && !userOptions.empty() && !userOptions.back().isEmpty()) {
-                            userOptions.back().erase(userOptions.back().getSize() - 1, 1);
+                        } else if (isAddingOptions && userInputOption.isEmpty()) {
+                            userInputOption.erase(userInputOption.getSize() - 1, 1);
                         } else if (isChoosingCorrectAnswer && !userCorrectAnswer.isEmpty()) {
                             userCorrectAnswer.erase(userCorrectAnswer.getSize() - 1, 1);
                         }
@@ -368,16 +378,14 @@ void Quiz::ajouterQcm(sf::RenderWindow& window, sf::Font& font, bool afficherCho
                         if (isInputtingQuestion) {
                             userInputQuestion += static_cast<char>(event.text.unicode);
                         } else if (isAddingOptions) {
-                            if (userOptions.empty() || userOptions.back().getSize() > 0) {
-                                userOptions.push_back(sf::String()); // Nouvelle option si aucune n'existe encore
-                            }
-                            userOptions.back() += static_cast<char>(event.text.unicode);
+                            userInputOption += static_cast<char>(event.text.unicode);
                         } else if (isChoosingCorrectAnswer) {
                             userCorrectAnswer += static_cast<char>(event.text.unicode);
                         }
                     }
                 }
             }
+            
 
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
                 if (isInputtingQuestion) {
@@ -385,24 +393,29 @@ void Quiz::ajouterQcm(sf::RenderWindow& window, sf::Font& font, bool afficherCho
                     isInputtingQuestion = false;
                     isAddingOptions = true;
                 } else if (isAddingOptions) {
-                    if (userOptions.size() >= maxOptions) {
-                        // Limite des options atteinte, passer au choix de la réponse
+                    userOptions.push_back(userInputOption.toAnsiString());
+                    i++;
+                    userInputOption.clear();
+                    if (i==4){
+                        // Limite des options atteinte, passer au choix de la réponse correcte
                         isAddingOptions = false;
                         isChoosingCorrectAnswer = true;
-                    } else {
-                        // Ajouter une nouvelle option (vide) pour permettre à l'utilisateur de continuer
-                        userOptions.push_back(sf::String());
                     }
+
                 } else if (isChoosingCorrectAnswer) {
                     // Valider la réponse correcte et terminer
                     isChoosingCorrectAnswer = false;
 
                     // Ajouter la question au quiz
-                    std::vector<std::string> options;
-                    for (const auto& option : userOptions) {
-                        options.push_back(option.toAnsiString());
+                    questions.push_back(std::make_shared<Qcm>(userInputQuestion.toAnsiString(), userOptions, userCorrectAnswer.toAnsiString()));
+                    std::cout << "On ajoute le QCM :" << std::endl;
+                    std::cout << userInputQuestion.toAnsiString() << std::endl;
+                    std::cout << userCorrectAnswer.toAnsiString() << std::endl;
+                    for (std::string option : userOptions){
+                        std::cout << option<< std::endl;
+
                     }
-                    questions.push_back(std::make_shared<Qcm>(userInputQuestion.toAnsiString(), options, userCorrectAnswer.toAnsiString()));
+                    sauvegarderQcm(Qcm(userInputQuestion.toAnsiString(), userOptions, userCorrectAnswer.toAnsiString()));
 
                 }
             }
@@ -419,19 +432,19 @@ void Quiz::ajouterQcm(sf::RenderWindow& window, sf::Font& font, bool afficherCho
         }
 
         if (isAddingOptions) {
-            optionsText.setString("Ajoutez une option (max 5) : " + (userOptions.empty() ? "" : userOptions.back()));
+            optionsText.setString("Ajoutez l'option " +std::to_string(i)+ " (max 5) : " + userInputOption);
             window.draw(optionsText);
 
             // Afficher toutes les options saisies
-            for (size_t i = 0; i < userOptions.size(); ++i) {
-                sf::Text optionText("Option " + std::to_string(i + 1) + ": " + userOptions[i], font, 25);
-                optionText.setPosition(50, 300 + static_cast<float>(i) * 40); // Décalage vertical pour chaque option
+            for (int j = 0; j < i; j++) {
+                sf::Text optionText("Option " + std::to_string(j + 1) + ": " + userOptions[j], font, 25);
+                optionText.setPosition(50, 300 + static_cast<float>(j) * 40); // Décalage vertical pour chaque option
                 window.draw(optionText);
             }
         }
 
         if (isChoosingCorrectAnswer) {
-            correctAnswerText.setString("Entrez la réponse correcte : " + userCorrectAnswer);
+            correctAnswerText.setString("Entrez la reponse correcte : " + userCorrectAnswer);
             window.draw(correctAnswerText);
         }
 

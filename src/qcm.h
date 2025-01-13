@@ -15,8 +15,8 @@ public:
     // Constructeur
     Qcm(const std::string& t, const std::vector<std::string>& o, const std::string& r);
 
-    // Méthode pour obtenir les options sous forme de chaîne
-    const std::string& getOptions() const;
+    // Méthode pour obtenir les options 
+    const std::vector<std::string>& getOptions() const;
 
     // Méthode pour afficher une question et ses options
     void afficherQuestion(int questionNumber) const;
