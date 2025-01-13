@@ -1,0 +1,10 @@
+Combien font 2 + 2 ?
+4
+
+QCM : Quelle est la capitale de la France ?
+Paris
+Paris
+Rome
+Londres
+Bruxelles
+END
